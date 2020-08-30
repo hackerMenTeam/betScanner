@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 
 import logging
 
@@ -10,10 +11,12 @@ def main():
     driver.get("https://www.marathonbet.ru/su/")
     btn_tennis = driver.find_element_by_class_name("icon-sport-tennis")
     btn_tennis.click()
-    logging.basicConfig(level=logging.INFO, filename='./myapp.log', format='%(asctime)s %(levelname)s:%(message)s')
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
-    logging.info('start tennis page')
-    buf = []
+    start_time = time.time()
+    file_log = logging.FileHandler('Log.log')
+    console_out = logging.StreamHandler()
+    logging.basicConfig(handlers=(file_log, console_out), format='[%(asctime)s | %(levelname)s]: %(message)s',
+                        datefmt='%m.%d.%Y %H:%M:%S', level=logging.INFO)
+    mathes = []
     table_mass=scrollToTheEnd(driver)
     for i in table_mass:
         match = (i.find_element_by_xpath(
@@ -26,11 +29,10 @@ def main():
         k2 = i.find_element_by_xpath(
             ".//td[contains(@class,'price') and not(contains(@class,'first-in-main-row'))]").text
         table = dict(match=match, K1=k1, K2=k2)
-        buf.append(table)
-    # print(buf)
-    logging.info('end of program')
+        mathes.append(table)
+    print(mathes)
+    logging.info('time for script execution %s seconds'% str(time.time() - start_time))
     driver.close()
-    return len(table_mass)
 
 
 def scrollToTheEnd(driver):
