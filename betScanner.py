@@ -11,7 +11,6 @@ def main():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--log-level=3")
-    print(os.environ.get("CHROMEDRIVER_PATH"))
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),options=chrome_options)
 
     driver.get("https://www.marathonbet.ru/su/")
