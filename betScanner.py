@@ -1,10 +1,18 @@
 import time
 import logging
+import os
 from selenium import webdriver
 
 
 def main():
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--log-level=3")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),options=chrome_options)
+
     driver.get("https://www.marathonbet.ru/su/")
     driver.find_element_by_class_name("icon-sport-tennis").click()
     start_time = time.time()
