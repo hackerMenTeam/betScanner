@@ -2,13 +2,6 @@ import logging
 import time
 
 
-def has_rates(table_string):
-    if (table_string['K1'] or table_string['K2']) == '—':
-        return False
-    else:
-        return True
-
-
 class TennisMarathonBet:
     CLASS_K_1 = 'first-in-main-row'
     XPATH_K_1 = ".//td[contains(@class,'%s')]" % CLASS_K_1
@@ -22,8 +15,7 @@ class TennisMarathonBet:
         self.driver = driver
 
     def load_page(self):
-        self.driver.get("https://www.marathonbet.ru/su/")
-        self.driver.find_element_by_class_name("icon-sport-tennis").click()
+        self.driver.get('https://www.marathonbet.ru/su/popular/Tennis+-+2398')
         self.get_table_rows()
         return True
 
@@ -59,3 +51,10 @@ class TennisMarathonBet:
                     time.sleep(0.1)
             else:
                 return True
+
+
+def has_rates(table_string):
+    if (table_string['K1'] or table_string['K2']) == '—':
+        return False
+    else:
+        return True
