@@ -1,14 +1,15 @@
 import logging
 import time
-from selenium.common.exceptions import NoSuchElementException
+import re
+from lxml import html
 
 
 class Tennis1xbet:
+    XPATH_TABLE_MATCHES = "//div[contains(@class,'c-events-scoreboard__wrap')]"
     XPATH_PLAYER_1 = ".//div[@class='c-events-scoreboard__team-wrap'][1]"
     XPATH_PLAYER_2 = ".//div[@class='c-events-scoreboard__team-wrap'][2]"
-    XPATH_K_1 = ".//span[@class='c-bets__bet c-bets__bet_coef c-bets__bet_sm'][1]"
-    XPATH_K_2 = ".//span[@class='c-bets__bet c-bets__bet_coef c-bets__bet_sm'][2]"
-    CLASS_TABLE_MATCHES = 'c-events-scoreboard__wrap'
+    XPATH_K_1 = ".//span[@title='П1']"
+    XPATH_K_2 = ".//span[@title='П2']"
 
     def __init__(self, driver):
         self.driver = driver
@@ -18,7 +19,9 @@ class Tennis1xbet:
         return True
 
     def get_matches(self):
-        table_rows = self.driver.find_elements_by_class_name(self.CLASS_TABLE_MATCHES)
+        page = self.driver.page_source
+        tree = html.fromstring(page)
+        table_rows = tree.xpath(self.XPATH_TABLE_MATCHES)
         start_time = time.time()
         file_log = logging.FileHandler('Log.log')
         console_out = logging.StreamHandler()
@@ -28,15 +31,16 @@ class Tennis1xbet:
         logging.info('time for script execution %s seconds' % str(time.time() - start_time))
         return matches
 
-    def list_matches(self, table_string):
-        player_1 = get_name((table_string.find_element_by_xpath(self.XPATH_PLAYER_1)).text)
-        player_2 = get_name((table_string.find_element_by_xpath(self.XPATH_PLAYER_2)).text)
+    def list_matches(self, table_row):
+        player_1 = get_name(table_row.xpath(self.XPATH_PLAYER_1)[0].text_content())
+        player_2 = get_name(table_row.xpath(self.XPATH_PLAYER_2)[0].text_content())
         match = '%s VS %s' % (player_1, player_2)
         try:
-            k_1 = table_string.find_element_by_xpath(self.XPATH_K_1).text
-            k_2 = table_string.find_element_by_xpath(self.XPATH_K_2).text
+            # the exception is triggered when the rates are not set
+            k_1 = re.sub(r'[^0-9.]+', r'', table_row.xpath(self.XPATH_K_1)[0].text_content())
+            k_2 = re.sub(r'[^0-9.]+', r'', table_row.xpath(self.XPATH_K_2)[0].text_content())
             return dict(match=match, K1=k_1, K2=k_2)
-        except NoSuchElementException:
+        except IndexError:
             pass
 
 
