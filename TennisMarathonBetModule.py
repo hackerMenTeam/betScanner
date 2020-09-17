@@ -1,4 +1,3 @@
-import logging
 import time
 from lxml import html
 
@@ -21,16 +20,9 @@ class TennisMarathonBet:
         return True
 
     def get_matches(self):
-        page = self.driver.page_source
-        tree = html.fromstring(page)
+        tree = html.fromstring(self.driver.page_source)
         table_rows = tree.xpath(self.XPATH_TABLE_MATCHES)
-        start_time = time.time()
-        file_log = logging.FileHandler('Log.log')
-        console_out = logging.StreamHandler()
-        logging.basicConfig(level=logging.INFO, format='[%(asctime)s | %(levelname)s]: %(message)s',
-                            datefmt='%m.%d.%Y %H:%M:%S', handlers=(file_log, console_out))
         matches = list(filter(has_rates, map(self.list_matches, table_rows)))
-        logging.info('time for script execution %s seconds' % str(time.time() - start_time))
         return matches
 
     def list_matches(self, table_row):

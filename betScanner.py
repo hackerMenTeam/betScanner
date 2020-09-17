@@ -4,6 +4,8 @@ import TennisMarathonBetModule
 import Tennis1xbetModule
 import TennisVulkanbetModule
 import threading
+import logging
+import time
 
 
 def main():
@@ -24,13 +26,27 @@ def main():
 def start_marathonbet(driver):
     tennis = TennisMarathonBetModule.TennisMarathonBet(driver)
     tennis.load_page()
-    print(tennis.get_matches())
+    start_time = time.time()
+    file_log = logging.FileHandler('Log.log')
+    console_out = logging.StreamHandler()
+    logging.basicConfig(level=logging.INFO, format='[%(asctime)s | %(levelname)s]: %(message)s',
+                        datefmt='%m.%d.%Y %H:%M:%S', handlers=(file_log, console_out))
+    matches = dict(bookmaker_key='1xbet', matches=tennis.get_matches())
+    print(matches)
+    logging.info('time for script execution %s seconds' % str(time.time() - start_time))
 
 
 def start_1xbet(driver):
     tennis = Tennis1xbetModule.Tennis1xbet(driver)
     tennis.load_page()
-    print(tennis.get_matches())
+    start_time = time.time()
+    file_log = logging.FileHandler('Log.log')
+    console_out = logging.StreamHandler()
+    logging.basicConfig(level=logging.INFO, format='[%(asctime)s | %(levelname)s]: %(message)s',
+                        datefmt='%m.%d.%Y %H:%M:%S', handlers=(file_log, console_out))
+    matches = dict(bookmaker_key='marathonbet', matches=tennis.get_matches())
+    print(matches)
+    logging.info('time for script execution %s seconds' % str(time.time() - start_time))
 
 
 if __name__ == "__main__":
