@@ -4,7 +4,8 @@ from app import db
 class Bookmakers(db.Model):
     __tablename__ = 'bookmakers'
 
-    id = db.Column(db.String, nullable=False, unique=True, primary_key=True)
+    id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+    name = db.Column(db.String, nullable=False)
     url = db.Column(db.VARCHAR, nullable=False, unique=True)
     is_enabled = db.Column(db.BOOLEAN, nullable=False)
     vpn_required = db.Column(db.BOOLEAN, nullable=False)
@@ -18,11 +19,11 @@ class Bookmakers(db.Model):
         return '<id {}>'.format(self.id)
 
 
-class Matches(db.Model):
-    __tablename__ = 'matches'
+class Bets(db.Model):
+    __tablename__ = 'bets'
 
-    id = db.Column(db.String, nullable=False, unique=True, primary_key=True)
-    bookmaker_id = db.Column(db.String, db.ForeignKey("bookmakers.id"))
+    id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+    bookmaker_id = db.Column(db.Integer, db.ForeignKey("bookmakers.id"))
     match_title = db.Column(db.VARCHAR, nullable=False)
     sport_kind = db.Column(db.VARCHAR, nullable=False)
     championship = db.Column(db.VARCHAR, nullable=False)
@@ -43,9 +44,9 @@ class Matches(db.Model):
 class Forks(db.Model):
     __tablename__ = 'forks'
 
-    id = db.Column(db.String, nullable=False, unique=True, primary_key=True)
-    major_bet = db.Column(db.String, db.ForeignKey("matches.id"))
-    minor_bet = db.Column(db.String, db.ForeignKey("matches.id"))
+    id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+    major_bet = db.Column(db.Integer, db.ForeignKey("bets.id"))
+    minor_bet = db.Column(db.Integer, db.ForeignKey("bets.id"))
     timestamp = db.Column(db.TIMESTAMP, nullable=False)
 
     def __init__(self, major_bet, minor_bet, timestamp):
