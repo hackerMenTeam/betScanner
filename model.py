@@ -1,14 +1,14 @@
 from app import db
 
 
-class Bookmakers(db.Model):
+class Bookmaker(db.Model):
     __tablename__ = 'bookmakers'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String(20), nullable=False)
     url = db.Column(db.VARCHAR, nullable=False, unique=True)
-    is_enabled = db.Column(db.BOOLEAN, nullable=False)
-    vpn_required = db.Column(db.BOOLEAN, nullable=False)
+    is_enabled = db.Column(db.BOOLEAN, nullable=False, default=True)
+    vpn_required = db.Column(db.BOOLEAN, nullable=False, default=False)
 
     def __init__(self, url, is_enabled, vpn_required):
         self.url = url
@@ -19,7 +19,7 @@ class Bookmakers(db.Model):
         return '<id {}>'.format(self.id)
 
 
-class Bets(db.Model):
+class Bet(db.Model):
     __tablename__ = 'bets'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
@@ -41,7 +41,7 @@ class Bets(db.Model):
         return '<id {}>'.format(self.id)
 
 
-class Forks(db.Model):
+class Fork(db.Model):
     __tablename__ = 'forks'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
