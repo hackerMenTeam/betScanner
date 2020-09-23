@@ -7,11 +7,7 @@ from setup import basedir
 class BaseConfig(object):
     SECRET_KEY = "SO_SECURE"
     DEBUG = True
-    pg_user = "postgres"
-    pg_pwd = "qwerty10253"
-    pg_port = "5432"
-    SQLALCHEMY_DATABASE_URI = "postgresql://{username}:{password}@localhost:{port}/bet_scanner".format(
-        username=pg_user, password=pg_pwd, port=pg_port)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('BET_SCANNER_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
