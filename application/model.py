@@ -1,4 +1,4 @@
-from app import db
+from index import db
 
 
 class Bookmaker(db.Model):

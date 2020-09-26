@@ -2,6 +2,9 @@ from flask import render_template, jsonify
 from index import app, db
 
 
+from .model import *
+
+
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
