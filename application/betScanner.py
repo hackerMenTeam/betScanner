@@ -2,10 +2,10 @@ import os
 from selenium import webdriver
 import TennisMarathonBetModule
 import Tennis1xbetModule
+import TennisVulkanbetModule
+import threading
 import logging
 import time
-import asyncio
-from concurrent.futures.thread import ThreadPoolExecutor
 
 
 def main():
@@ -24,7 +24,7 @@ def start_marathonbet(driver):
     tennis = TennisMarathonBetModule.TennisMarathonBet(driver)
     tennis.load_page()
     start_time = time.time()
-    file_log = logging.FileHandler('Log.log')
+    file_log = logging.FileHandler('../Log.log')
     console_out = logging.StreamHandler()
     logging.basicConfig(level=logging.INFO, format='[%(asctime)s | %(levelname)s]: %(message)s',
                         datefmt='%m.%d.%Y %H:%M:%S', handlers=(file_log, console_out))
@@ -39,7 +39,7 @@ def start_1xbet(driver):
     tennis = Tennis1xbetModule.Tennis1xbet(driver)
     tennis.load_page()
     start_time = time.time()
-    file_log = logging.FileHandler('Log.log')
+    file_log = logging.FileHandler('../Log.log')
     console_out = logging.StreamHandler()
     logging.basicConfig(level=logging.INFO, format='[%(asctime)s | %(levelname)s]: %(message)s',
                         datefmt='%m.%d.%Y %H:%M:%S', handlers=(file_log, console_out))
