@@ -1,9 +1,8 @@
 import os
 from selenium import webdriver
-import TennisMarathonBetModule
-import Tennis1xbetModule
-import TennisVulkanbetModule
-import threading
+from application.parsers import TennisMarathonBetModule, Tennis1xbetModule
+from concurrent.futures.thread import ThreadPoolExecutor
+import asyncio
 import logging
 import time
 
@@ -17,7 +16,9 @@ def main():
     chrome_options.add_argument("--log-level=3")
     driver_1xbet = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     driver_marathonbet = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-    read_data([start_1xbet, start_marathonbet], [driver_1xbet, driver_marathonbet])
+    modules_list = [start_1xbet, start_marathonbet]
+    drivers_list = [driver_1xbet, driver_marathonbet]
+    read_data(modules_list, drivers_list)
 
 
 def start_marathonbet(driver):
