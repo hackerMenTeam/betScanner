@@ -1,6 +1,6 @@
 from flask import render_template, jsonify
-from index import app, db
-
+from index import app
+from .dto.BookmakerDto import BookmakerDto
 
 from .model import *
 
@@ -17,4 +17,4 @@ def any_root_path(path):
 
 @app.route('/api/list_bookmakers', methods=['GET'])
 def list_bookmakers():
-    return jsonify(['MarathoneBet', '1XBet'])
+    return jsonify(list(map(lambda bookmaker: BookmakerDto(bookmaker), Bookmaker.list_all())))

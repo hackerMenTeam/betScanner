@@ -16,10 +16,30 @@ class Bookmakers extends Component {
         })
     }
 
+    formatYesNo = (value) => value ? 'Yes' : 'No';
+
     render() {
-        return <ul>
-            {this.state.bookmakers.map(bookmaker => <li key={bookmaker}>{bookmaker}</li>)}
-            </ul>;
+        return <div>
+            <h2>We are scanning the following bookmakers at the moment</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Enabled</th>
+                        <th>VPN required</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.state.bookmakers.map(bookmaker => <tr key={bookmaker}>
+                        <td>{bookmaker.name}</td>
+                        <td>{this.formatYesNo(bookmaker.is_enabled)}</td>
+                        <td>{this.formatYesNo(bookmaker.vpn_required)}</td>
+                        <td><a href={bookmaker.url} target="_blank">[open]</a></td>
+                    </tr>)}
+                </tbody>
+            </table>
+        </div>;
     }
 }
 
