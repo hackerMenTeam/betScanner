@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{username}:{password}@loca
     username=pg_user, password=pg_pwd, port=pg_port)
 db = SQLAlchemy(app)
 
-from model import Bookmaker, Bet, Fork
+#from model import Bookmaker, Bet, Fork
 
 @app.route('/')
 def hello():

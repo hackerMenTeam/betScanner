@@ -10,7 +10,8 @@ class Bookmaker(db.Model):
     is_enabled = db.Column(db.BOOLEAN, nullable=False, default=True)
     vpn_required = db.Column(db.BOOLEAN, nullable=False, default=False)
 
-    def __init__(self, url, is_enabled, vpn_required):
+    def __init__(self, name, url, is_enabled, vpn_required):
+        self.name = name
         self.url = url
         self.is_enabled = is_enabled
         self.vpn_required = vpn_required
