@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from index import db
 
 
@@ -10,13 +12,71 @@ class Bookmaker(db.Model):
     is_enabled = db.Column(db.BOOLEAN, nullable=False, default=True)
     vpn_required = db.Column(db.BOOLEAN, nullable=False, default=False)
 
-    def __init__(self, url, is_enabled, vpn_required):
+    def __init__(self, name, url, is_enabled, vpn_required):
+        self.name = name
         self.url = url
         self.is_enabled = is_enabled
         self.vpn_required = vpn_required
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.name == other.name
+        return False
+
+    @staticmethod
+    def get_by_id(id):
+        return db.session.query(Bookmaker).get(id)
+
+    @staticmethod
+    def list_all():
+        return db.session.query(Bookmaker).all()
+
+    @staticmethod
+    def list_by_criteria(criteria):
+        queries = []
+        if criteria.is_enabled != None:
+            queries.append(Bookmaker.is_enabled == criteria.is_enabled)
+        if criteria.vpn_required != None:
+            queries.append(Bookmaker.vpn_required == criteria.vpn_required)
+        if criteria.name_fragment != None:
+            queries.append(or_(Bookmaker.name.like('%{}%'.format(criteria.name_fragment)),
+                               Bookmaker.url.like('%{}%'.format(criteria.name_fragment))))
+
+        return db.session.query(Bookmaker).filter(*queries).all()
+
+    class Criteria:
+
+        def __init__(self):
+            self.is_enabled = None
+            self.vpn_required = None
+            self.name_fragment = None
+
+        @property
+        def is_enabled(self):
+            return self.__is_enabled
+
+        @property
+        def vpn_required(self):
+            return self.__vpn_required
+
+        @property
+        def name_fragment(self):
+            return self.__name_fragment
+
+        @is_enabled.setter
+        def is_enabled(self, value):
+            self.__is_enabled = value
+
+        @vpn_required.setter
+        def vpn_required(self, value):
+            self.__vpn_required = value
+
+        @name_fragment.setter
+        def name_fragment(self, value):
+            self.__name_fragment = value
 
 
 class Bet(db.Model):
