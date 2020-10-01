@@ -1,1 +1,1 @@
-web: python betScanner.py
+web: gunicorn main:app
