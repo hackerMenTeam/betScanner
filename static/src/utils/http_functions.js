@@ -2,6 +2,8 @@
 
 import axios from 'axios';
 
-export function list_bookmakers() {
-    return axios.get('/api/list_bookmakers');
-}
+export const list_bookmakers = () => axios.get('/api/list_bookmakers');
+
+export const perform_scanning = () => axios.post('/api/scan');
+
+export const stop_scanner = () => axios.post('/api/stop_scanner');

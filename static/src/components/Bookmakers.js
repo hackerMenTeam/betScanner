@@ -31,7 +31,7 @@ class Bookmakers extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {this.state.bookmakers.map(bookmaker => <tr key={bookmaker}>
+                    {this.state.bookmakers.map(bookmaker => <tr key={bookmaker.id}>
                         <td>{bookmaker.name}</td>
                         <td>{this.formatYesNo(bookmaker.is_enabled)}</td>
                         <td>{this.formatYesNo(bookmaker.vpn_required)}</td>

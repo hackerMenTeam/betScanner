@@ -3,6 +3,7 @@ from lxml import html
 
 
 class Tennis1xbet:
+    KEY = "1xbet"
     XPATH_TABLE_MATCHES = "//div[contains(@class,'c-events-scoreboard__wrap')]"
     XPATH_PLAYER_1 = ".//div[@class='c-events-scoreboard__team-wrap'][1]"
     XPATH_PLAYER_2 = ".//div[@class='c-events-scoreboard__team-wrap'][2]"
@@ -11,10 +12,16 @@ class Tennis1xbet:
 
     def __init__(self, driver):
         self.driver = driver
+        self.isRunning = False
 
     def load_page(self):
         self.driver.get('https://1xstavka.ru/live/Tennis/')
+        self.isRunning = True
         return True
+
+    def shut_down(self):
+        self.isRunning = False
+        self.driver.close()
 
     def get_matches(self):
         tree = html.fromstring(self.driver.page_source)

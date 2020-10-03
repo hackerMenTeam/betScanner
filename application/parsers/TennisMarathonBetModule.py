@@ -3,6 +3,8 @@ from lxml import html
 
 
 class TennisMarathonBet:
+    KEY = "Marathonbet"
+    STATUS = dict(RUNNING = 'RUNNING')
     XPATH_TABLE_MATCHES = "//table[@class='coupon-row-item']"
     XPATH_PLAYER = ".//a[@class='member-link']"
     CLASS_K_1 = "first-in-main-row"
@@ -13,11 +15,17 @@ class TennisMarathonBet:
 
     def __init__(self, driver):
         self.driver = driver
+        self.isRunning = False
 
     def load_page(self):
         self.driver.get('https://www.marathonbet.ru/su/popular/Tennis+-+2398')
         self.get_table_rows()
+        self.isRunning = True
         return True
+
+    def shut_down(self):
+        self.driver.close()
+        self.isRunning = False
 
     def get_matches(self):
         tree = html.fromstring(self.driver.page_source)

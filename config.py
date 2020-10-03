@@ -6,7 +6,7 @@ from setup import basedir
 
 class BaseConfig(object):
     SECRET_KEY = "SO_SECURE"
-    DEBUG = True
+    DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('BET_SCANNER_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
