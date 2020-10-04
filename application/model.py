@@ -1,7 +1,12 @@
 from sqlalchemy import or_
+from sqlalchemy.orm import relationship
 
 from index import db
 
+forks_to_bets = db.Table('association', db.Model.metadata,
+    db.Column('forks_id', db.Integer, db.ForeignKey('forks.id')),
+    db.Column('bets_id', db.Integer, db.ForeignKey('bets.id'))
+)
 
 class Bookmaker(db.Model):
     __tablename__ = 'bookmakers'
@@ -19,12 +24,15 @@ class Bookmaker(db.Model):
         self.vpn_required = vpn_required
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<name {}>'.format(self.name)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.name == other.name
         return False
+
+    def __lt__(self, other):
+        return len(self.name) < len(other.name)
 
     @staticmethod
     def get_by_id(id):
@@ -79,40 +87,105 @@ class Bookmaker(db.Model):
             self.__name_fragment = value
 
 
-class Bet(db.Model):
-    __tablename__ = 'bets'
+class Match(db.Model):
+    __tablename__ = 'matches'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-    bookmaker_id = db.Column(db.Integer, db.ForeignKey("bookmakers.id"))
-    match_title = db.Column(db.VARCHAR, nullable=False)
+    title = db.Column(db.VARCHAR, nullable=False)
     sport_kind = db.Column(db.VARCHAR, nullable=False)
     championship = db.Column(db.VARCHAR, nullable=False)
-    k1 = db.Column(db.Float, nullable=False)
-    k2 = db.Column(db.Float, nullable=False)
 
-    def __init__(self, match_title, sport_kind, championship, k1, k2):
-        self.match_title = match_title
+    def __init__(self, title, sport_kind, championship):
+        self.title = title
         self.sport_kind = sport_kind
         self.championship = championship
-        self.k1 = k1
-        self.k2 = k2
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<title {}'.format(self.title)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.title == other.title
+        return False
+
+    def __lt__(self, other):
+        return self.title.__lt__(other.match_title)
+
+
+class Bet(db.Model):
+    __tablename__ = 'bets'
+    id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+    match_id = db.Column(db.Integer, db.ForeignKey("matches.id"))
+    match = relationship("Match", foreign_keys=[match_id])
+    bookmaker_id = db.Column(db.Integer, db.ForeignKey("bookmakers.id"))
+    bookmaker = relationship("Bookmaker", foreign_keys=[bookmaker_id])
+    exodus = db.Column(db.String(10), nullable=False)
+    coef = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, match, bookmaker, exodus, coef):
+        self.match = match
+        self.bookmaker = bookmaker
+        self.exodus = exodus
+        self.coef = coef
+
+    def __repr__(self):
+        return '<match {}, bookmaker {}, coef {}>'.format(self.match, self.bookmaker,self.coef)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.match == other.match and self.bookmaker.__eq__(other.bookmaker)
+        return False
+
+    def __lt__(self, other):
+        return self.bookmaker.__lt__(other.bookmaker)
 
 
 class Fork(db.Model):
     __tablename__ = 'forks'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-    major_bet = db.Column(db.Integer, db.ForeignKey("bets.id"))
-    minor_bet = db.Column(db.Integer, db.ForeignKey("bets.id"))
+    bet = relationship("Bet", secondary=forks_to_bets)
     timestamp = db.Column(db.TIMESTAMP, nullable=False)
 
-    def __init__(self, major_bet, minor_bet, timestamp):
-        self.major_bet = major_bet
-        self.minor_bet = minor_bet
+    def __init__(self, bet, timestamp):
+        self.bet = bet
         self.timestamp = timestamp
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<bet {}>'.format(self.bet)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.id.__eq__(other.id)
+        return False
+
+    def __lt__(self, other):
+        return self.id.__lt__(other.id)
+
+
+# class ForkToBet(db.Model):
+#     __tablename__ = 'forks_to_bet'
+#
+#     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
+#     fork_id = db.Column(db.Integer, db.ForeignKey("fork.id"))
+#     fork = relationship("Match", foreign_keys=[fork_id])
+#     bet_id = db.Column(db.Integer, db.ForeignKey("bet.id"))
+#     bet = relationship("Match", foreign_keys=[bet_id])
+#
+#     def __init__(self, fork, bet):
+#         self.fork = fork
+#         self.bet = bet
+#
+#     def __repr__(self):
+#         return '<fork {}, bet {}>'.format(self.fork, self.bet)
+#
+#     def __eq__(self, other):
+#         if isinstance(other, self.__class__):
+#             return self.bet.__eq__(other.bet)
+#         return False
+#
+#     def __lt__(self, other):
+#         return self.bet.__lt__(other.bet)
+
+
+

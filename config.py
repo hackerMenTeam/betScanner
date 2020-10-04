@@ -19,3 +19,13 @@ class TestingConfig(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     DEBUG_TB_ENABLED = True
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+
+
+class DevelopmentConfig(object):
+    """Development configuration."""
+    TESTING = True
+    DEBUG = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    DEBUG_TB_ENABLED = True
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
