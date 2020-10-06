@@ -129,11 +129,11 @@ class Bet(db.Model):
         self.coef = coef
 
     def __repr__(self):
-        return '<match {}, bookmaker {}, coef {}>'.format(self.match, self.bookmaker,self.coef)
+        return '<match {}, bookmaker {}, coef {}>, exodus {}'.format(self.match, self.bookmaker,self.coef, self.exodus)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.match == other.match and self.bookmaker.__eq__(other.bookmaker)
+            return self.match == other.match and self.bookmaker.__eq__(other.bookmaker) and self.coef == other.coef
         return False
 
     def __lt__(self, other):
@@ -156,11 +156,11 @@ class Fork(db.Model):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.id.__eq__(other.id)
+            return self.bet.__eq__(other.bet)
         return False
 
     def __lt__(self, other):
-        return self.id.__lt__(other.id)
+        return self.bet.__lt__(other.bet)
 
 
 # class ForkToBet(db.Model):
