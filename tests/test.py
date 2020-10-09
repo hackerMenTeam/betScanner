@@ -5,7 +5,7 @@ import time
 
 
 class TestFindFork(unittest.TestCase):
-    bets_2 = [
+    bets_2_exoduses = [
         [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False), 'win_1',
              1.125),
          Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
@@ -26,7 +26,30 @@ class TestFindFork(unittest.TestCase):
              'win_1', 1.125),
          Bet(Match('match1', 'tennis', 'championship'), Bookmaker('azino', 'https://azino.ru', True, False),
              'win_2', 1.5)]]
-    bets_3 = [
+
+    bets_2_exoduses_no_forks = [
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False), 'win_1',
+             1.125),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
+             'win_2', 2.5)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+             'win_1', 1.24),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+             'win_2', 3.02)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+             'win_1', 1.127),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+             'win_2', 2.3)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+             'win_1', 1.45),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+             'win_2', 2.9)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('azino', 'https://azino.ru', True, False),
+             'win_1', 1.125),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('azino', 'https://azino.ru', True, False),
+             'win_2', 1.5)]]
+
+    bets_3_exoduses = [
         [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False), 'win_1',
              2.5),
          Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
@@ -45,6 +68,62 @@ class TestFindFork(unittest.TestCase):
              'win_2', 2.5),
          Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
              'draw', 3.9)]]
+
+    bets_3_exoduses_no_forks = [
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False), 'win_1',
+             2.5),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
+             'win_2', 1.3),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
+             'draw', 1.7)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+             'win_1', 2.9),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+             'win_2', 1.7),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+             'draw', 2.3)],
+        [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+             'win_1', 2.6),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+             'win_2', 2.5),
+         Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+             'draw', 1.9)]]
+
+    all_forks_2_exoduses = [
+        Fork([Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_1', 4),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
+                  'win_2', 5.7)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'),
+                  Bookmaker('marathonbet', 'https://marathonbet.ru', True, False), 'win_1', 1.24),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False),
+                  'win_2', 5.7)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'),
+                  Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+                  'win_1', 1.24),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+                  'win_2', 5.3)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'),
+                  Bookmaker('marathonbet', 'https://marathonbet.ru', True, False),
+                  'win_1', 1.24),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_2', 8.9)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_1', 4),
+              Bet(Match('match1', 'tennis', 'championship'),
+                  Bookmaker('marathonbet', 'https://marathonbet.ru', True, False), 'win_2', 3.92)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+                  'win_1', 1.127),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_2', 8.9)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_1', 4),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('azino', 'https://azino.ru', True, False),
+                  'win_2', 1.5)], time.time()),
+        Fork([Bet(Match('match1', 'tennis', 'championship'), Bookmaker('ggbet', 'https://ggbet.ru', True, False),
+                  'win_1', 4),
+              Bet(Match('match1', 'tennis', 'championship'), Bookmaker('vulkan', 'https://vulkan.ru', True, False),
+                  'win_2', 5.3)], time.time())]
 
     all_forks_3 = [Fork(
         [Bet(Match('match1', 'tennis', 'championship'), Bookmaker('1xbet', 'https://1xstavka.ru', True, False), 'win_1',
@@ -98,4 +177,13 @@ class TestFindFork(unittest.TestCase):
                   'draw', 5.7)], time.time())]
 
     def test_find_all_forks_3_exoduses(self):
-        self.assertEqual(sorted(find_forks(self.bets_3)), sorted(self.all_forks_3))
+        self.assertEqual(sorted(find_forks(self.bets_3_exoduses)), sorted(self.all_forks_3))
+
+    def test_find_all_forks_2_exoduses(self):
+        self.assertEqual(sorted(find_forks(self.bets_2_exoduses)), sorted(self.all_forks_2_exoduses))
+
+    def test_find_all_forks_no_forks_2_exoduses(self):
+        self.assertEqual(sorted(find_forks(self.bets_2_exoduses_no_forks)), [])
+
+    def test_find_all_forks_no_forks_3_exoduses(self):
+        self.assertEqual(sorted(find_forks(self.bets_3_exoduses_no_forks)), [])
