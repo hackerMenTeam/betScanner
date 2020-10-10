@@ -8,6 +8,7 @@ forks_to_bets = db.Table('association', db.Model.metadata,
     db.Column('bet_id', db.Integer, db.ForeignKey('bets.id'))
 )
 
+
 class Bookmaker(db.Model):
     __tablename__ = 'bookmakers'
 
