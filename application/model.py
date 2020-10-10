@@ -4,8 +4,8 @@ from sqlalchemy.orm import relationship
 from index import db
 
 forks_to_bets = db.Table('association', db.Model.metadata,
-    db.Column('forks_id', db.Integer, db.ForeignKey('forks.id')),
-    db.Column('bets_id', db.Integer, db.ForeignKey('bets.id'))
+    db.Column('fork_id', db.Integer, db.ForeignKey('forks.id')),
+    db.Column('bet_id', db.Integer, db.ForeignKey('bets.id'))
 )
 
 class Bookmaker(db.Model):
@@ -120,20 +120,20 @@ class Bet(db.Model):
     bookmaker_id = db.Column(db.Integer, db.ForeignKey("bookmakers.id"))
     bookmaker = relationship("Bookmaker", foreign_keys=[bookmaker_id])
     exodus = db.Column(db.String(10), nullable=False)
-    coef = db.Column(db.Integer, nullable=False)
+    rate = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, match, bookmaker, exodus, coef):
+    def __init__(self, match, bookmaker, exodus, rate):
         self.match = match
         self.bookmaker = bookmaker
         self.exodus = exodus
-        self.coef = coef
+        self.rate = rate
 
     def __repr__(self):
-        return '<match {}, bookmaker {}, coef {}>, exodus {}'.format(self.match, self.bookmaker,self.coef, self.exodus)
+        return '<match {}, bookmaker {}, rate {}>, exodus {}'.format(self.match, self.bookmaker, self.rate, self.exodus)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.match == other.match and self.bookmaker.__eq__(other.bookmaker) and self.coef == other.coef
+            return self.match == other.match and self.bookmaker.__eq__(other.bookmaker) and self.rate == other.rate
         return False
 
     def __lt__(self, other):
@@ -144,48 +144,20 @@ class Fork(db.Model):
     __tablename__ = 'forks'
 
     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-    bet = relationship("Bet", secondary=forks_to_bets)
+    bets = relationship("Bet", secondary=forks_to_bets)
     timestamp = db.Column(db.TIMESTAMP, nullable=False)
 
     def __init__(self, bet, timestamp):
-        self.bet = bet
+        self.bets = bet
         self.timestamp = timestamp
 
     def __repr__(self):
-        return '<bet {}>'.format(self.bet)
+        return '<bet {}>'.format(self.bets)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.bet.__eq__(other.bet)
+            return self.bets.__eq__(other.bets)
         return False
 
     def __lt__(self, other):
-        return self.bet.__lt__(other.bet)
-
-
-# class ForkToBet(db.Model):
-#     __tablename__ = 'forks_to_bet'
-#
-#     id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
-#     fork_id = db.Column(db.Integer, db.ForeignKey("fork.id"))
-#     fork = relationship("Match", foreign_keys=[fork_id])
-#     bet_id = db.Column(db.Integer, db.ForeignKey("bet.id"))
-#     bet = relationship("Match", foreign_keys=[bet_id])
-#
-#     def __init__(self, fork, bet):
-#         self.fork = fork
-#         self.bet = bet
-#
-#     def __repr__(self):
-#         return '<fork {}, bet {}>'.format(self.fork, self.bet)
-#
-#     def __eq__(self, other):
-#         if isinstance(other, self.__class__):
-#             return self.bet.__eq__(other.bet)
-#         return False
-#
-#     def __lt__(self, other):
-#         return self.bet.__lt__(other.bet)
-
-
-
+        return self.bets.__lt__(other.bets)
